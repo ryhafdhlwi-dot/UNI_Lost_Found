@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">UNI Lost&Found</div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/report">Report</a>
+        <a href="/search">Search</a>
+        <a href="/database">Database</a>
+        <a href="/dashboard">Dashboard</a>
+
+        {% if session.get('admin') %}
+            <a href="/logout" class="login-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<section class="login-section">
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <p>Login to access the database and dashboard.</p>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/login">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="login-hint">
+            Username: <b>admin</b> | Password: <b>1234</b>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-REFD37XTH0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-REFD37XTH0');
+</script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">UNI Lost&Found</div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/report">Report</a>
+        <a href="/search">Search</a>
+        <a href="/database">Database</a>
+        <a href="/dashboard">Dashboard</a>
+
+        {% if session.get('admin') %}
+            <a href="/logout" class="login-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<section class="dashboard-section">
+    <h2>Dashboard Overview</h2>
+    <p>Statistics about lost item reports.</p>
+
+    <div class="dashboard-grid">
+
+        <div class="stat-card">
+            <h3>Total Reports</h3>
+            <span>{{ total }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Electronics</h3>
+            <span>{{ electronics }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Cards</h3>
+            <span>{{ cards }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Books</h3>
+            <span>{{ books }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Personal</h3>
+            <span>{{ personal }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Other</h3>
+            <span>{{ other }}</span>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>

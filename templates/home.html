@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+ 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-REFD37XTH0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-REFD37XTH0');
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNI Lost & Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">UNI Lost&Found</div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/report">Report</a>
+        <a href="/search">Search</a>
+        <a href="/database">Database</a>
+        <a href="/dashboard">Dashboard</a>
+
+        {% if session.get('admin') %}
+            <a href="/logout" class="login-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <p class="tagline">University Lost & Found Platform</p>
+        <h1>Find Your Lost Items Faster and Easier</h1>
+        <p class="description">
+            A smart and simple system that helps students report, search, and manage lost items inside the university campus.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="/report" class="primary-btn">Report Lost Item</a>
+            <a href="/search" class="secondary-btn">Search Items</a>
+        </div>
+    </div>
+
+    <div class="hero-card">
+        <h3>Quick Access</h3>
+        <p>Search by category, gate, or item description.</p>
+
+        <div class="mini-stats">
+            <div>
+                <strong>5</strong>
+                <span>Categories</span>
+            </div>
+            <div>
+                <strong>4</strong>
+                <span>Gates</span>
+            </div>
+            <div>
+                <strong>24/7</strong>
+                <span>Access</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="categories">
+    <h2>Item Categories</h2>
+    <p>Choose a category to report or search for lost items.</p>
+
+    <div class="category-grid">
+
+        <a href="/report?category=Electronics" class="category-card">
+            <span>💻</span>
+            <h3>Electronics</h3>
+            <p>Laptops, phones, chargers, headphones.</p>
+        </a>
+
+        <a href="/report?category=Cards" class="category-card">
+            <span>🪪</span>
+            <h3>Cards</h3>
+            <p>Student ID, bank cards, access cards.</p>
+        </a>
+
+        <a href="/report?category=Books" class="category-card">
+            <span>📚</span>
+            <h3>Books</h3>
+            <p>Textbooks, notebooks, study materials.</p>
+        </a>
+
+        <a href="/report?category=Personal" class="category-card">
+            <span>🎒</span>
+            <h3>Personal</h3>
+            <p>Bags, bottles, keys, wallets.</p>
+        </a>
+
+        <a href="/report?category=Other" class="category-card">
+            <span>📦</span>
+            <h3>Other</h3>
+            <p>Any other lost or found item.</p>
+        </a>
+
+    </div>
+</section>
+
+</body>
+</html>

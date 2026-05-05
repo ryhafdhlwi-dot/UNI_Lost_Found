@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-REFD37XTH0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-REFD37XTH0');
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">UNI Lost&Found</div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/report">Report</a>
+        <a href="/search">Search</a>
+        <a href="/database">Database</a>
+        <a href="/dashboard">Dashboard</a>
+
+        {% if session.get('admin') %}
+            <a href="/logout" class="login-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<section class="database-section">
+    <h2>All Reported Items</h2>
+    <p>Here you can view all lost item reports stored in the database.</p>
+
+    {% if reports|length == 0 %}
+        <div class="empty-message">
+            <h3>No reports yet 🚫</h3>
+            <p>Once a student reports an item, it will appear here.</p>
+            <a href="/report">Report an Item</a>
+        </div>
+    {% else %}
+
+    <div class="reports-grid">
+        {% for report in reports %}
+        <div class="report-card">
+            <div class="image-box">
+                <img src="{{ url_for('static', filename='uploads/' + report[4]) }}" alt="Item Image">
+            </div>
+
+            <div class="report-info">
+                <h3>{{ report[1] }}</h3>
+                <p>{{ report[2] }}</p>
+                <span>{{ report[3] }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% endif %}
+</section>
+
+</body>
+</html>
