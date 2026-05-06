@@ -1,12 +1,23 @@
 from flask import Flask, render_template, request, redirect, session
-import sqlite3
 import os
+from werkzeug.utils import secure_filename
+
+from database import (
+    create_table,
+    add_report,
+    get_all_reports,
+    search_reports,
+    count_all_reports,
+    count_by_category
+)
 
 app = Flask(__name__)
 app.secret_key = "uni_lost_found_secret_key"
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+create_table()
 
 
 @app.route("/")
@@ -22,30 +33,13 @@ def report():
         gate = request.form["gate"]
         image = request.files["image"]
 
-        image_name = image.filename
+        os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
+        image_name = secure_filename(image.filename)
         image_path = os.path.join(app.config["UPLOAD_FOLDER"], image_name)
         image.save(image_path)
 
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS reports (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                category TEXT NOT NULL,
-                description TEXT NOT NULL,
-                gate TEXT NOT NULL,
-                image TEXT NOT NULL
-            )
-        """)
-
-        cursor.execute("""
-            INSERT INTO reports (category, description, gate, image)
-            VALUES (?, ?, ?, ?)
-        """, (category, description, gate, image_name))
-
-        conn.commit()
-        conn.close()
+        add_report(category, description, gate, image_name)
 
         return redirect("/database")
 
@@ -57,24 +51,7 @@ def database():
     if "admin" not in session:
         return redirect("/login")
 
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS reports (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            category TEXT NOT NULL,
-            description TEXT NOT NULL,
-            gate TEXT NOT NULL,
-            image TEXT NOT NULL
-        )
-    """)
-
-    cursor.execute("SELECT * FROM reports ORDER BY id DESC")
-    reports = cursor.fetchall()
-
-    conn.close()
-
+    reports = get_all_reports()
     return render_template("database.html", reports=reports)
 
 
@@ -85,20 +62,7 @@ def search():
 
     if request.method == "POST":
         keyword = request.form["keyword"]
-
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT * FROM reports
-            WHERE category LIKE ?
-            OR description LIKE ?
-            OR gate LIKE ?
-            ORDER BY id DESC
-        """, ('%' + keyword + '%', '%' + keyword + '%', '%' + keyword + '%'))
-
-        results = cursor.fetchall()
-        conn.close()
+        results = search_reports(keyword)
 
     return render_template("search.html", results=results, keyword=keyword)
 
@@ -108,28 +72,12 @@ def dashboard():
     if "admin" not in session:
         return redirect("/login")
 
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT COUNT(*) FROM reports")
-    total = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM reports WHERE category='Electronics'")
-    electronics = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM reports WHERE category='Cards'")
-    cards = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM reports WHERE category='Books'")
-    books = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM reports WHERE category='Personal'")
-    personal = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM reports WHERE category='Other'")
-    other = cursor.fetchone()[0]
-
-    conn.close()
+    total = count_all_reports()
+    electronics = count_by_category("Electronics")
+    cards = count_by_category("Cards")
+    books = count_by_category("Books")
+    personal = count_by_category("Personal")
+    other = count_by_category("Other")
 
     return render_template(
         "dashboard.html",
