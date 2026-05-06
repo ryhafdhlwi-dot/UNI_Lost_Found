@@ -11,31 +11,28 @@
 
 <body>
 
-<header class="header">
-    <div class="header-inner">
+<nav class="navbar">
 
-        <div class="logo">
-            <a href="/">UNI Lost&Found</a>
-        </div>
-
-        <nav class="header-nav">
-            <a href="/">Home</a>
-            <a href="/report">Report</a>
-            <a href="/search">Search</a>
-            <a href="/database">Database</a>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/logout" class="login-btn">Logout</a>
-        </nav>
-
+    <div class="logo">
+        UNI Lost&Found
     </div>
-</header>
 
-<section class="page">
-
-    <div class="page-title">
-        <h1>All Reported Items</h1>
-        <p>All reports stored in the database</p>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/report">Report</a>
+        <a href="/search">Search</a>
+        <a href="/database">Database</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout" class="login-btn">Logout</a>
     </div>
+
+</nav>
+
+
+<section class="database-section">
+
+    <h2>All Reported Items</h2>
+    <p>All reports stored in the database</p>
 
     {% if reports %}
 
@@ -54,29 +51,19 @@
             </thead>
 
             <tbody>
-
                 {% for report in reports %}
-
                 <tr>
-
                     <td>{{ report[0] }}</td>
 
                     <td>
-                        <img
-                        src="{{ url_for('static', filename='uploads/' + report[4]) }}"
-                        width="100">
+                        <img src="{{ url_for('static', filename='uploads/' + report[4]) }}">
                     </td>
 
                     <td>{{ report[1] }}</td>
-
                     <td>{{ report[2] }}</td>
-
                     <td>{{ report[3] }}</td>
-
                 </tr>
-
                 {% endfor %}
-
             </tbody>
 
         </table>
@@ -85,8 +72,9 @@
 
     {% else %}
 
-    <div class="empty-box">
-        <h2>No reports yet</h2>
+    <div class="empty-message">
+        <h3>No reports yet</h3>
+        <p>Once a student reports an item, it will appear here.</p>
     </div>
 
     {% endif %}
