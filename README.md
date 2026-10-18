@@ -3,6 +3,9 @@
 
 A university lost-and-found web application developed as an academic team project at Umm Al-Qura University.
 
+## Project Poster
+![UNI Lost & Found Poster](photo_2026-10-18_15-48-16.jpg)
+
 ## Project Overview
 
 UNI Lost & Found helps students report and search for lost or found items through a simple web interface.
