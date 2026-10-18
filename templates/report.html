@@ -1,83 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-REFD37XTH0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-REFD37XTH0');
-</script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Lost Item</title>
+    <title>Report Item</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
 <nav class="navbar">
-    <div class="logo">UNI Lost&Found</div>
+
+    <div class="logo">
+        UNI Lost&Found
+    </div>
 
     <div class="nav-links">
         <a href="/">Home</a>
         <a href="/report">Report</a>
         <a href="/search">Search</a>
-        <a href="/database">Database</a>
-        <a href="/dashboard">Dashboard</a>
 
-        {% if session.get('admin') %}
+        {% if "admin" in session %}
+            <a href="/database">Database</a>
+            <a href="/dashboard">Dashboard</a>
             <a href="/logout" class="login-btn">Logout</a>
         {% else %}
             <a href="/login" class="login-btn">Login</a>
         {% endif %}
     </div>
+
 </nav>
 
-<section class="form-section">
-    <div class="form-container">
-        <h2>Report Lost Item</h2>
-        <p>Please fill the details below to report a lost item.</p>
 
-        <form id="reportForm" method="POST" action="/report" enctype="multipart/form-data">
+<section class="form-section">
+
+    <div class="form-container">
+
+        <h1>Report Lost Item</h1>
+
+        <p>
+            Please fill in the item details clearly.
+        </p>
+
+        <form method="POST" enctype="multipart/form-data">
 
             <label>Category</label>
-            <select id="category" name="category">
-                <option value="">Select Category</option>
+
+            <select name="category" required>
+
+                <option value="">Select category</option>
+
                 <option value="Electronics">Electronics</option>
                 <option value="Cards">Cards</option>
                 <option value="Books">Books</option>
                 <option value="Personal">Personal</option>
                 <option value="Other">Other</option>
+
             </select>
 
+
+            <label>Item Type</label>
+
+            <input
+            type="text"
+            name="item_type"
+            placeholder="Example: iPhone, AirPods, Book"
+            required>
+
+
+            <label>Color</label>
+
+            <input
+            type="text"
+            name="color"
+            placeholder="Example: Black, White, Blue"
+            required>
+
+
             <label>Description</label>
-            <textarea id="description" name="description" placeholder="Describe the lost item..."></textarea>
+
+            <textarea
+            name="description"
+            placeholder="Describe the item clearly"
+            required></textarea>
+
 
             <label>Gate</label>
-            <select id="gate" name="gate">
-                <option value="">Select Gate</option>
+
+            <select name="gate" required>
+
+                <option value="">Select gate</option>
+
                 <option value="Gate 1">Gate 1</option>
                 <option value="Gate 2">Gate 2</option>
                 <option value="Gate 3">Gate 3</option>
                 <option value="Gate 4">Gate 4</option>
+
             </select>
 
-            <label>Upload Image</label>
-            <input type="file" id="image" name="image">
 
-            <button type="submit">Submit Report</button>
+            <label>Upload Image</label>
+
+            <input
+            type="file"
+            name="image"
+            accept="image/*"
+            required>
+
+
+            <button type="submit">
+                Submit Report
+            </button>
 
         </form>
-    </div>
-</section>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+    </div>
+
+</section>
 
 </body>
 </html>

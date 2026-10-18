@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
-import os
 from werkzeug.utils import secure_filename
+import os
 
 from database import (
     create_table,
@@ -8,14 +8,17 @@ from database import (
     get_all_reports,
     search_reports,
     count_all_reports,
-    count_by_category
+    count_by_category,
+    delete_report
 )
 
 app = Flask(__name__)
-app.secret_key = "uni_lost_found_secret_key"
+app.secret_key = os.environ["FLASK_SECRET_KEY"]
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 create_table()
 
@@ -29,19 +32,19 @@ def home():
 def report():
     if request.method == "POST":
         category = request.form["category"]
+        item_type = request.form["item_type"]
+        color = request.form["color"]
         description = request.form["description"]
         gate = request.form["gate"]
         image = request.files["image"]
-
-        os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
         image_name = secure_filename(image.filename)
         image_path = os.path.join(app.config["UPLOAD_FOLDER"], image_name)
         image.save(image_path)
 
-        add_report(category, description, gate, image_name)
+        add_report(category, item_type, color, description, gate, image_name)
 
-        return redirect("/database")
+        return redirect("/search")
 
     return render_template("report.html")
 
@@ -90,6 +93,15 @@ def dashboard():
     )
 
 
+@app.route("/delete/<int:report_id>")
+def delete(report_id):
+    if "admin" not in session:
+        return redirect("/login")
+
+    delete_report(report_id)
+    return redirect("/database")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = ""
@@ -98,7 +110,7 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        if username == "admin" and password == "1234":
+        if username == os.environ.get("ADMIN_USERNAME") and password == os.environ.get("ADMIN_PASSWORD") and username and password:
             session["admin"] = username
             return redirect("/dashboard")
         else:
@@ -114,4 +126,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
